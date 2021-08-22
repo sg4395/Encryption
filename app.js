@@ -1,4 +1,6 @@
 //jshint esversion:6
+require('dotenv').config();
+
 const express=require("express");
 const app= express();
 const bodyParser= require('body-parser');
@@ -18,8 +20,9 @@ const loginSchema=new mongoose.Schema({
   email:String,
   password:String
 });
-const secret= "youwillneverguessthepasswordboy";
-loginSchema.plugin(encrypt,{secret:secret, encryptedFields: ['password'] });
+// const secret= "youwillneverguessthepasswordboy"; this is put into .env
+// seceret is our random string encryption key, we can also use generated key.
+loginSchema.plugin(encrypt,{secret:process.env.SECRET, encryptedFields: ['password'] });
 //mongoose plugin adds functionality to your shcema.
 //encyrpted Fild specifies which field to encrypt, it takes an array.
 // mongoose encrypt encrpts when the save is used or the insert, and when we use find(), it decrypts the field.

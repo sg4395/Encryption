@@ -1,0 +1,16 @@
+Lv1 : check password and email against stored.
+
+Lv2: lv1 but password is now encrypted. But if we deploy our website and git repo, then people can see our encryption method of secret key.
+
+Use mongoose-encryption:
+ Const secret= "randomString"
+xxxxxxSchema.plugin(encrypt,{secret:secret, encryptedFields: ['field1, field2'] });
+Plug in is before creating collection using Schema. Plugin enriches schema function.
+
+Lv3: use dotenv to add environment variable to store sensitive info.
+require('dotenv'),config(); no need for const. Because we don't need to call it back, only need it up and running right at the start.
+touch .env in your root directory. This is a hidden file.
+Add environment variables in the form of NAME=value.
+
+To fetch it back out into .js use process.env.NAME
+Use gitignore to include .env file.
