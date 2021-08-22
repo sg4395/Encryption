@@ -7,10 +7,16 @@ Use mongoose-encryption:
 xxxxxxSchema.plugin(encrypt,{secret:secret, encryptedFields: ['field1, field2'] });
 Plug in is before creating collection using Schema. Plugin enriches schema function.
 
-Lv3: use dotenv to add environment variable to store sensitive info.
+use dotENV (.env):
+To store sensitive info in hidden file that wont be seen, use dotenv to add environment variable to store sensitive info.
 require('dotenv'),config(); no need for const. Because we don't need to call it back, only need it up and running right at the start.
 touch .env in your root directory. This is a hidden file.
 Add environment variables in the form of NAME=value.
 
-To fetch it back out into .js use process.env.NAME
+To fetch it back out into app.js use process.env.NAME
 Use gitignore to include .env file.
+
+lv3: hashing
+problem with level 2 is it requires a key or a encryption method.
+
+hashing turns  password into a hash that basically are designed to go forward rather than both ways.
