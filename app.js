@@ -5,8 +5,8 @@ const express=require("express");
 const app= express();
 const bodyParser= require('body-parser');
 const https=require("https");
-const encrypt=require("mongoose-encryption");
-
+// const encrypt=require("mongoose-encryption");
+const md5=require("md5");
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(__dirname + '/public'));
 app.listen(3000,function(req,res){
@@ -22,8 +22,12 @@ const loginSchema=new mongoose.Schema({
 });
 // const secret= "youwillneverguessthepasswordboy"; this is put into .env
 // seceret is our random string encryption key, we can also use generated key.
-loginSchema.plugin(encrypt,{secret:process.env.SECRET, encryptedFields: ['password'] });
+
+
+
+// loginSchema.plugin(encrypt,{secret:process.env.SECRET, encryptedFields: ['password'] });
 //mongoose plugin adds functionality to your shcema.
+
 //encyrpted Fild specifies which field to encrypt, it takes an array.
 // mongoose encrypt encrpts when the save is used or the insert, and when we use find(), it decrypts the field.
 const Login=mongoose.model("Login",loginSchema);
@@ -60,7 +64,7 @@ else{
   }else{
     const newUser= new Login({
       email:req.body.username,
-      password:req.body.password
+      password:md5(req.body.password)
     });
     newUser.save(function(err){
       if(!err){res.render("secrets");}
@@ -89,7 +93,7 @@ Login.findOne({email:typedEmail},function(err,foundUser){
     console.log(err);
   }else{
     if (foundUser){
-      if(foundUser.password===typedPassword){
+      if(foundUser.password===md5(typedPassword)){
         res.render("secrets");
     }else{res.send("wrong password");}}
     else{

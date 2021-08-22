@@ -20,3 +20,9 @@ lv3: hashing
 problem with level 2 is it requires a key or a encryption method.
 
 hashing turns  password into a hash that basically are designed to go forward rather than both ways.
+
+1. when people register with their password, it gets turned into a hash thats then stored on database server.
+2. when people login with their password, the password entered gets turned into a hash and is then compared with the database server hash.
+
+* this works because for example. if you were to hack into the database and got the hash, it wouldnt do anything because you can't convert it back to
+the original entry. so even if you were to type the hash as password, since the result will be the hash of what you typed, you wont get the same result.
