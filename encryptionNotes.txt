@@ -26,3 +26,12 @@ hashing turns  password into a hash that basically are designed to go forward ra
 
 * this works because for example. if you were to hack into the database and got the hash, it wouldnt do anything because you can't convert it back to
 the original entry. so even if you were to type the hash as password, since the result will be the hash of what you typed, you wont get the same result.
+
+
+lv4: salting
+- salting adds random strings after your password and this way only the salt rounds are recorded but not the actual password. since salt rounds, it would be
+extremely time consuming.
+
+1. use bcrypt, much less hash rate than md5.
+2. use bcrypt.hash(password, saltrounds, function(err, hash)) to generate password hash
+3. use bcrypt.compare(password,hash, function(err, result)), wheere result is a boolian taht can be used with if statements.

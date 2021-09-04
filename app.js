@@ -7,6 +7,7 @@ const bodyParser= require('body-parser');
 const https=require("https");
 // const encrypt=require("mongoose-encryption");
 const md5=require("md5");
+const bcrypt=require("bcrypt");
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(__dirname + '/public'));
 app.listen(3000,function(req,res){
@@ -55,26 +56,28 @@ res.render("submit");
 
 
 app.post("/register",function(req,res){
+  bcrypt.hash(req.body.password,10,function(err,hash){
+    Login.findOne({email:{$in:[req.body.username]}},function(err,foundLogin){
+    if(err){console.log(err);}
+    else{
+      if(foundLogin){
+        res.send("sorry email taken");
+      }else{
+        const newUser= new Login({
+          email:req.body.username,
+          password:hash
+        });
+        newUser.save(function(err){
+          if(!err){res.render("secrets");}
+          else{
+            console.log(err);
+          }
+        });
+        console.log("saved login is "+newUser.email+" "+newUser.password);
+    }
+    }});});
+  });
 //findOne is for checking if in the database theres one which the email is the same as entered on register route.
-Login.findOne({email:{$in:[req.body.username]}},function(err,foundLogin){
-if(err){console.log(err);}
-else{
-  if(foundLogin){
-    res.send("sorry email taken");
-  }else{
-    const newUser= new Login({
-      email:req.body.username,
-      password:md5(req.body.password)
-    });
-    newUser.save(function(err){
-      if(!err){res.render("secrets");}
-      else{
-        console.log(err);
-      }
-    });
-    console.log("saved login is "+newUser.email+" "+newUser.password);
-}
-}});});
 
 
 
@@ -86,22 +89,19 @@ else{
 
 app.post("/login", function(req,res){
 var typedEmail=req.body.username;
-var typedPassword=req.body.password;
 
 Login.findOne({email:typedEmail},function(err,foundUser){
   if(err){
     console.log(err);
   }else{
     if (foundUser){
-      if(foundUser.password===md5(typedPassword)){
+    bcrypt.compare(req.body.password,foundUser.password,function(err,result){
+      if(result===true){
         res.render("secrets");
-    }else{res.send("wrong password");}}
-    else{
-      res.send("no account found");
-    }
-  }});
-
-
-
-
+    }else{res.send("wrong password");}});
+  } else{
+    res.send("no account found");
+  }
+}
+});
 });
