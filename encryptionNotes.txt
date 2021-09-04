@@ -69,3 +69,17 @@ to use in register:
 to use in login:
 create user object with username field:req.body.username and password field.
 use req.login(user, function(){}) from passport to authenticate.
+
+
+lv6: OAuth
+- letting fb google and such do the authentication for you.
+- has granular access meaning you can select what information to need/ permission to after authentication.
+- security risk mitigated and migrated to these big firms with high security.
+-readonly/ write access
+- Revoke access ( user can deauthorize the app using theit facebook OAuth)
+
+1. set up app in their developer console, tell them who what we are.
+2. redirect auth to authenticator
+3. User grants permission
+4. our app recieves auth code/token, logs them on
+5. our app can request/use access token that lasts longer than auth token. to req info from the background.
