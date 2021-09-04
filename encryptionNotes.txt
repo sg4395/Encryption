@@ -35,3 +35,37 @@ extremely time consuming.
 1. use bcrypt, much less hash rate than md5.
 2. use bcrypt.hash(password, saltrounds, function(err, hash)) to generate password hash
 3. use bcrypt.compare(password,hash, function(err, result)), wheere result is a boolian taht can be used with if statements.
+
+
+lv5: cookies sesssions
+- cookies are saved session thats created by the server to send to browser and to keep in browser so next time a get request happens, the server sends back
+files according to the cookie so progreess, identification, requests dont have to start over again.
+- in encryption, cookies are generated once u successffully authenticated yourself and the cookie with that status prevents
+the need to relog in, once the session is over or you log off, the cookie is destroyed.
+
+
+const session=require("express-session");
+const passport=require("passport");
+const passportLocalMongoose=require("passport-local-mongoose");
+
+app.use(session({    *before mongoose connect
+  secret:"Our Little Secret to put to Env",
+  resave: false,
+  saveUninitialized:false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+then
+userSchema.plugin(passportLocalMongoose);  *after userSchema
+
+passport.use(User.createStrategy()); * after model under schema
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+to use in register:
+  User.register({username:req.body.username},req.body.password,function(err,user){
+    passport.authenticate("local")(req,res,function(){   * this is the passport method that generates cookie for our session when theres no error.
+to use in login:
+create user object with username field:req.body.username and password field.
+use req.login(user, function(){}) from passport to authenticate.
